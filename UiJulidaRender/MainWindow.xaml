@@ -1,0 +1,50 @@
+﻿<Window x:Class="UiJulidaRender.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UiJulidaRender"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="1080" Width="1920">
+    <Canvas Name="MainCanvas">
+        <StackPanel Background="Black" Panel.ZIndex="1">
+
+            <WrapPanel>
+                <TextBlock Text="Render Time: " Foreground="White"/>
+                <TextBlock Name="RenderTimeTextBlock" Text="0" Foreground="White"/>
+                <TextBlock Text="ms" Foreground="White"/>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="Max Iterations:" Foreground="White"/>
+                <Slider Name="MaxIterationsSlider" Minimum="0" Maximum="255" Width="200" Value="50" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=MaxIterationsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="x:" Foreground="White"/>
+                <Slider Name="ConstantXSlider" Minimum="-2" Maximum="2" Width="200" Value="-0.8" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=ConstantXSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="y:" Foreground="White"/>
+                <Slider Name="ConstantYSlider" Minimum="-2" Maximum="2" Width="200" Value="0.156" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=ConstantYSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="Smooth Iteration: " Foreground="White"/>
+                <CheckBox Name="SmoothIterCheckBox" Click="SmoothIterationCheckBox_Clicked"/>
+            </WrapPanel>
+
+            <WrapPanel>
+                <TextBlock Text="c = " Foreground="White"/>
+                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantXSlider}"/>
+                <TextBlock Text=" + " Foreground="White"/>
+                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantYSlider}"/>
+                <TextBlock Text="i" Foreground="White"/>
+            </WrapPanel>
+        </StackPanel>
+    </Canvas>
+</Window>
