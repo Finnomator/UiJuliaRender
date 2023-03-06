@@ -5,46 +5,77 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UiJulidaRender"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
-    <Canvas Name="MainCanvas">
-        <StackPanel Background="Black" Panel.ZIndex="1">
+        Title="MainWindow">
 
-            <WrapPanel>
-                <TextBlock Text="Render Time: " Foreground="White"/>
+    <Grid Name="MainCanvas">
+        <Grid Background="Black" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Render Time: " Foreground="White"/>
+            <WrapPanel Grid.Column="1">
                 <TextBlock Name="RenderTimeTextBlock" Text="0" Foreground="White"/>
                 <TextBlock Text="ms" Foreground="White"/>
             </WrapPanel>
 
-            <WrapPanel>
-                <TextBlock Text="Max Iterations:" Foreground="White"/>
-                <Slider Name="MaxIterationsSlider" Minimum="0" Maximum="255" Width="200" Value="50" ValueChanged="Slider_ValueChanged"/>
-                <TextBox Text="{Binding ElementName=MaxIterationsSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Text="Max Iterations:" Foreground="White" Grid.Row="1"/>
+            <WrapPanel Grid.Row="1" Grid.Column="1">
+                <Slider Name="MaxIterationsSlider" Minimum="1" Maximum="1000" Width="200" Value="50" SmallChange="1" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=MaxIterationsSlider, StringFormat={}{0:n0}, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
 
-            <WrapPanel>
-                <TextBlock Text="x:" Foreground="White"/>
+            <TextBlock Text="x:" Foreground="White" Grid.Row="2"/>
+            <WrapPanel Grid.Row="2" Grid.Column="1">
                 <Slider Name="ConstantXSlider" Minimum="-2" Maximum="2" Width="200" Value="-0.8" ValueChanged="Slider_ValueChanged"/>
-                <TextBox Text="{Binding ElementName=ConstantXSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding ElementName=ConstantXSlider, StringFormat={}{0:n4}, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
 
-            <WrapPanel>
-                <TextBlock Text="y:" Foreground="White"/>
+            <TextBlock Text="y:" Foreground="White" Grid.Row="3"/>
+            <WrapPanel Grid.Row="3" Grid.Column="1">
                 <Slider Name="ConstantYSlider" Minimum="-2" Maximum="2" Width="200" Value="0.156" ValueChanged="Slider_ValueChanged"/>
-                <TextBox Text="{Binding ElementName=ConstantYSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Text="{Binding ElementName=ConstantYSlider, StringFormat={}{0:n4}, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
 
-            <WrapPanel>
-                <TextBlock Text="Smooth Iteration: " Foreground="White"/>
-                <CheckBox Name="SmoothIterCheckBox" Click="SmoothIterationCheckBox_Clicked"/>
+            <TextBlock Text="Zoom:" Foreground="White" Grid.Row="4"/>
+            <WrapPanel Grid.Row="4" Grid.Column="2">
+                <Slider Name="ZoomSlider" Minimum="1" Maximum="200000" Width="200" Value="1" SmallChange="{Binding Value, RelativeSource={RelativeSource Self}}" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=ZoomSlider, StringFormat={}{0:n4}, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
             </WrapPanel>
 
-            <WrapPanel>
+            <TextBlock Text="Smooth Iteration: " Foreground="White" Grid.Row="5"/>
+            <CheckBox Name="SmoothIterCheckBox" Click="SmoothIterationCheckBox_Clicked" Grid.Row="5" Grid.Column="1"/>
+
+            <TextBlock Text="Color Gradient:" Foreground="White" Grid.Row="6"/>
+            <ComboBox Name="ColorGradientComboBox" SelectedIndex="0" SelectionChanged="ColorGradientComboBox_SelectionChanged" Grid.Row="6" Grid.Column="1">
+                <Image Name="RainbowGradientImg" Height="10" Width="200"/>
+                <Image Name="GrayScaleImg" Height="10" Width="200"/>
+            </ComboBox>
+
+            <TextBlock Text="Formula:" Foreground="White" Grid.Row="7"/>
+            <WrapPanel Grid.Row="7" Grid.Column="1">
                 <TextBlock Text="c = " Foreground="White"/>
-                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantXSlider}"/>
+                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantXSlider, StringFormat={}{0:n4}}"/>
                 <TextBlock Text=" + " Foreground="White"/>
-                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantYSlider}"/>
+                <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantYSlider, StringFormat={}{0:n4}}"/>
                 <TextBlock Text="i" Foreground="White"/>
             </WrapPanel>
-        </StackPanel>
-    </Canvas>
+
+            <Button Content="Export Image" Grid.Row="8" Click="ExportButton_Click"/>
+        </Grid>
+    </Grid>
 </Window>
