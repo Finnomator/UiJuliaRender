@@ -9,22 +9,21 @@ using System.Windows.Media.Imaging;
 namespace UiJulidaRender {
     public class MultiCoreRenderer {
 
-        private readonly Thread[] Threads;
+        private Thread[] Threads;
         private readonly WriteableBitmap RenderBitmap;
         private readonly MainWindow MainWindow;
         private long LastRenderTimeMs;
         private readonly Stopwatch sw = new();
         private int MaxIterations;
         private bool SmoothIteration;
-        private Vector Constant;
+        private FastVectorD Constant;
         private readonly byte[] ImgData;
         private int RunningThreads;
         private ColorGradients.ColorGradient ColorGradient;
         private double Zoom;
 
-        public MultiCoreRenderer(int threads, MainWindow mainWindow) {
+        public MultiCoreRenderer(MainWindow mainWindow) {
             MainWindow = mainWindow;
-            Threads = new Thread[threads];
             RenderBitmap = MainWindow.RenderBitmap;
             ImgData = new byte[RenderBitmap.PixelHeight * RenderBitmap.PixelWidth * 3];
         }
@@ -32,6 +31,10 @@ namespace UiJulidaRender {
         public void Render() {
 
             sw.Restart();
+
+            int threads = (int) MainWindow.ThreadsSlider.Value;
+
+            Threads = new Thread[threads];
 
             MaxIterations = (int) MainWindow.MaxIterationsSlider.Value;
             Zoom = MainWindow.ZoomSlider.Value;
@@ -77,7 +80,7 @@ namespace UiJulidaRender {
                 for (int x = 0; x < w / 2; ++x) {
                     double px = (x - w / 2) * scale;
 
-                    Point p = new(px, py);
+                    FastPointD p = new(px, py);
 
                     double iterations = SmoothIteration
                         ? ComputeIterationsSmooth(ref p, ref Constant, MaxIterations)
@@ -100,16 +103,16 @@ namespace UiJulidaRender {
             }
         }
 
-        private static void ComputeNext(ref Point current, ref Vector constant) {
+        private static void ComputeNext(ref FastPointD current, ref FastVectorD constant) {
             double zr = current.X * current.X - current.Y * current.Y;
             double zi = 2.0 * current.X * current.Y;
             current.X = zr + constant.X;
             current.Y = zi + constant.Y;
         }
 
-        private static double ModSqr(ref Point z) => z.X * z.X + z.Y * z.Y;
+        private static double ModSqr(ref FastPointD z) => z.X * z.X + z.Y * z.Y;
 
-        private static int ComputeIterations(ref Point z0, ref Vector constant, int maxIteration) {
+        private static int ComputeIterations(ref FastPointD z0, ref FastVectorD constant, int maxIteration) {
             int i = 0;
             while (i < maxIteration && ModSqr(ref z0) < 4.0) {
                 ComputeNext(ref z0, ref constant);
@@ -118,13 +121,63 @@ namespace UiJulidaRender {
             return i;
         }
 
-        private static double ComputeIterationsSmooth(ref Point z0, ref Vector constant, int maxIteration) {
+        private static double ComputeIterationsSmooth(ref FastPointD z0, ref FastVectorD constant, int maxIteration) {
             int i = 0;
             while (i < maxIteration && ModSqr(ref z0) < 4.0) {
                 ComputeNext(ref z0, ref constant);
                 ++i;
             }
             return i - Math.Log2(Math.Max(1, Math.Log2(Math.Sqrt(ModSqr(ref z0)))));
+        }
+    }
+
+    public struct FastPointD {
+        public double X { get; set; }
+        public double Y { get; set; }
+
+        public FastPointD(double x, double y) {
+            X = x;
+            Y = y;
+        }
+
+        public void Add(ref FastVectorD vector) {
+            X += vector.X;
+            Y += vector.Y;
+        }
+    }
+
+    public struct FastPointF {
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        public FastPointF(float x, float y) {
+            X = x;
+            Y = y;
+        }
+
+        public void Add(FastVectorF vector) {
+            X += vector.X;
+            Y += vector.Y;
+        }
+    }
+
+    public struct FastVectorD {
+        public double X { get; set; }
+        public double Y { get; set; }
+
+        public FastVectorD(double x, double y) {
+            X = x;
+            Y = y;
+        }
+    }
+
+    public struct FastVectorF {
+        public float X { get; set; }
+        public float Y { get; set; }
+
+        public FastVectorF(float x, float y) {
+            X = x;
+            Y = y;
         }
     }
 }

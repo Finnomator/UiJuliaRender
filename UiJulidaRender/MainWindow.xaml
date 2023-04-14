@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UiJulidaRender"
         mc:Ignorable="d"
-        Title="MainWindow">
+        Title="Julia Render">
 
     <Grid Name="MainCanvas">
         <Grid Background="Black" Panel.ZIndex="1" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -16,6 +16,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -63,11 +64,18 @@
             <TextBlock Text="Color Gradient:" Foreground="White" Grid.Row="6"/>
             <ComboBox Name="ColorGradientComboBox" SelectedIndex="0" SelectionChanged="ColorGradientComboBox_SelectionChanged" Grid.Row="6" Grid.Column="1">
                 <Image Name="RainbowGradientImg" Height="10" Width="200"/>
+                <Image Name="PastelRainbowGradientImg" Height="10" Width="200"/>
                 <Image Name="GrayScaleImg" Height="10" Width="200"/>
             </ComboBox>
 
-            <TextBlock Text="Formula:" Foreground="White" Grid.Row="7"/>
-            <WrapPanel Grid.Row="7" Grid.Column="1">
+            <TextBlock Text="Render Threads:" Foreground="White" Grid.Row="7"/>
+            <WrapPanel Grid.Row="7" Grid.Column="2">
+                <Slider Name="ThreadsSlider" Minimum="1" Maximum="2" Width="200" Value="1" SmallChange="1" ValueChanged="Slider_ValueChanged"/>
+                <TextBox Text="{Binding ElementName=ThreadsSlider, StringFormat={}{0:n0}, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+            </WrapPanel>
+
+            <TextBlock Text="Formula:" Foreground="White" Grid.Row="8"/>
+            <WrapPanel Grid.Row="8" Grid.Column="1">
                 <TextBlock Text="c = " Foreground="White"/>
                 <TextBlock Foreground="White" Text="{Binding Value, ElementName=ConstantXSlider, StringFormat={}{0:n4}}"/>
                 <TextBlock Text=" + " Foreground="White"/>
@@ -75,7 +83,7 @@
                 <TextBlock Text="i" Foreground="White"/>
             </WrapPanel>
 
-            <Button Content="Export Image" Grid.Row="8" Click="ExportButton_Click"/>
+            <Button Content="Export Image" Grid.Row="9" Click="ExportButton_Click"/>
         </Grid>
     </Grid>
 </Window>

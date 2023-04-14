@@ -60,6 +60,16 @@ namespace UiJulidaRender {
             new(0, 0, 255),
         }.Reverse().ToArray());
 
+        // "#FBB9C5", "#FDD0B1", "#F9EFC7", "#C3EDBF", "#B8DFE6", "#C5BBDE"
+        public static MultiColorGradient PastelRainbowGradient { get; } = new(new FastColor[] {
+            new(251, 185, 197),
+            new(253, 208, 177),
+            new(249, 239, 199),
+            new(195, 237, 191),
+            new(184, 223, 230),
+            new(197, 187, 222),
+        }.Reverse().ToArray());
+
         public static MonoGradient GrayScale { get; } = new(new(), new(255, 255, 255));
     }
 }

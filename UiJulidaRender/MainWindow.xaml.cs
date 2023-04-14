@@ -23,6 +23,8 @@ namespace UiJulidaRender {
             InitializeComponent();
 
             WindowState = WindowState.Maximized;
+            ThreadsSlider.Maximum = Environment.ProcessorCount;
+            ThreadsSlider.Value = Environment.ProcessorCount;
 
             RenderBitmap = new(W, H, 96, 96, PixelFormats.Rgb24, null);
             MainCanvas.Children.Add(new Image() {
@@ -34,16 +36,18 @@ namespace UiJulidaRender {
                 WriteableBitmap colorBmp = BitmapFactory.New((int) image.Width, (int) image.Height);
                 image.Source = colorBmp;
 
+                ColorGradient gradient;
+
+                if (image.Name == "RainbowGradientImg")
+                    gradient = RainbowGradient;
+                else if (image.Name == "GrayScaleImg")
+                    gradient = GrayScale;
+                else if (image.Name == "PastelRainbowGradientImg")
+                    gradient = PastelRainbowGradient;
+                else
+                    throw new Exception();
+
                 for (int x = 0; x < colorBmp.PixelWidth; x++) {
-
-                    ColorGradient gradient;
-
-                    if (image.Name == "RainbowGradientImg")
-                        gradient = RainbowGradient;
-                    else if (image.Name == "GrayScaleImg")
-                        gradient = GrayScale;
-                    else
-                        throw new Exception();
 
                     FastColor c = gradient.Lerp(x / image.Width);
 
@@ -52,7 +56,7 @@ namespace UiJulidaRender {
                 }
             }
 
-            Renderer = new(Environment.ProcessorCount, this);
+            Renderer = new(this);
             Renderer.Render();
         }
 
@@ -69,6 +73,8 @@ namespace UiJulidaRender {
             if (ColorGradientComboBox.SelectedIndex == 0)
                 ColorGradient = RainbowGradient;
             else if (ColorGradientComboBox.SelectedIndex == 1)
+                ColorGradient = PastelRainbowGradient;
+            else if (ColorGradientComboBox.SelectedIndex == 2)
                 ColorGradient = GrayScale;
             else
                 throw new Exception();
