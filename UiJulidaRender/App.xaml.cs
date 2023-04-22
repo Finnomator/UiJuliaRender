@@ -1,9 +1,4 @@
-﻿using System.Windows;
+﻿namespace UiJuliaRender;
 
-namespace UiJulidaRender {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
-    public partial class App : Application {
-    }
+public partial class App {
 }
