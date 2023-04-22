@@ -1,5 +1,9 @@
 # Ui Julia Render
 
+A program to render the Julia set.
+
+![gif](Screenshots/IterationChagne.gif)
+
 ## Installation (Windows only)
 
 Download the publish.zip of the [latest release](https://github.com/Finnomator/UiJulidaRender/releases/tag/1.0.0.1), extract it, and run the setup.exe.
